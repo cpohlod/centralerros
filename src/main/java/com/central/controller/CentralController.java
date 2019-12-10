@@ -61,6 +61,7 @@ public class CentralController {
     
     // FindAll logs
     @GetMapping("/logs/{token}")
+    @CrossOrigin(maxAge = 3600)
     public List<Log> findAllLogs(@PathVariable String token) {
     	processaLogin(token);
         return new ArrayList<Log>((Collection<? extends Log>) logRepo.findAll());
@@ -68,6 +69,7 @@ public class CentralController {
 
     // FindAll logins
     @GetMapping("/logins/{token}")
+    @CrossOrigin(maxAge = 3600)
     public List<Login> findAllLogins(@PathVariable String token) {
     	processaLogin(token);
         return new ArrayList<Login>((Collection<? extends Login>) loginRepo.findAll());
@@ -75,6 +77,7 @@ public class CentralController {
     
     // Find
     @GetMapping("/findlogin/{token}{email}")
+    @CrossOrigin(maxAge = 3600)
     public Login findlogin(@PathVariable String token, @PathVariable String email) {
     	processaLogin(token);
     	Login login = loginRepo.findByEmail(email);
@@ -114,6 +117,7 @@ public class CentralController {
     }
 
     @GetMapping("/deletelogin/{token}/{email}")
+    @CrossOrigin(maxAge = 3600)
     public void deleteLogin(@PathVariable String token, @PathVariable String email) {
     	processaLogin(token);
     	Login login = loginRepo.findByEmail(email);
