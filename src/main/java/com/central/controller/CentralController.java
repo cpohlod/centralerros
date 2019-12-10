@@ -87,7 +87,7 @@ public class CentralController {
     @RequestMapping(value = "savelogin", method = RequestMethod.POST)	
 	@CrossOrigin(maxAge = 3600)
 	@ResponseBody
-	public Login savelogin(HttpServletRequest request, HttpServletResponse response, @PathVariable String token, @RequestBody String jsonSecurity) {
+	public Login savelogin(HttpServletRequest request, HttpServletResponse response, @RequestBody String jsonSecurity) {
     	//processaLogin(token);
 		System.out.println("savelogin");
 		try {
@@ -113,7 +113,7 @@ public class CentralController {
 		}		
     }
 
-    @GetMapping("/deletelogin/{token}{email}")
+    @GetMapping("/deletelogin/{token}/{email}")
     public void deleteLogin(@PathVariable String token, @PathVariable String email) {
     	processaLogin(token);
     	Login login = loginRepo.findByEmail(email);
