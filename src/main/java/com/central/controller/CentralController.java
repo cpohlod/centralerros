@@ -84,11 +84,11 @@ public class CentralController {
         return login;
     }
 
-    @RequestMapping(value = "savelogin/{token}", method = RequestMethod.POST)	
+    @RequestMapping(value = "savelogin", method = RequestMethod.POST)	
 	@CrossOrigin(maxAge = 3600)
 	@ResponseBody
 	public Login savelogin(HttpServletRequest request, HttpServletResponse response, @PathVariable String token, @RequestBody String jsonSecurity) {
-    	processaLogin(token);
+    	//processaLogin(token);
 		System.out.println("savelogin");
 		try {
 	    	Login saveLogin = Login.jsonToLogin(jsonSecurity);
