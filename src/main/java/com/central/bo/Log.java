@@ -14,6 +14,7 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String title;
     private String type;
     private String orign;
     private String detail;
@@ -25,6 +26,7 @@ public class Log {
 
     public Log(String name, String type, String orign, String detail, Long quantity, Date createDate) {
     	this.setName(name); 
+    	this.setTitle(" title "+name);
     	this.setType(type);
     	this.setOrign(orign);
     	this.setDetail(detail);
@@ -46,6 +48,14 @@ public class Log {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getType() {
@@ -93,6 +103,7 @@ public class Log {
         return "Log{" +
                 "id=" + id +
                 ", name='" + getName() + '\'' +
+                ", title='" + getTitle() + '\'' +
                 ", type='" + getType() + '\'' +
                 ", orign='" + getOrign() + '\'' +
                 ", detail='" + getDetail() + '\'' +
