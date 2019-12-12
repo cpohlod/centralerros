@@ -14,31 +14,24 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String title;
     private String type;
     private String orign;
-    private String story;
+    private String detail;
     private Long quantity;
     private Date createDate;
     
     public Log() {
     }
 
-    public Log(String name, String type, Long quantity) {
-    	this.name = name; 
-    	this.type = type; 
-    	this.quantity = quantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Log{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", orign='" + orign + '\'' +
-                ", story='" + story + '\'' +
-                ", quantity=" + quantity +
-                '}';
+    public Log(String name, String type, String orign, String detail, Long quantity, Date createDate) {
+    	this.setName(name); 
+    	this.setTitle(" title "+name);
+    	this.setType(type);
+    	this.setOrign(orign);
+    	this.setDetail(detail);
+    	this.setQuantity(quantity);
+    	this.setCreateDate(createDate);
     }
 
     public Long getId() {
@@ -57,6 +50,14 @@ public class Log {
 		this.name = name;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -73,12 +74,12 @@ public class Log {
 		this.orign = orign;
 	}
 
-	public String getStory() {
-		return story;
+	public String getDetail() {
+		return detail;
 	}
 
-	public void setStory(String story) {
-		this.story = story;
+	public void setDetail(String detail) {
+		this.detail = detail;
 	}
 
 	public Long getQuantity() {
@@ -96,5 +97,19 @@ public class Log {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id=" + id +
+                ", name='" + getName() + '\'' +
+                ", title='" + getTitle() + '\'' +
+                ", type='" + getType() + '\'' +
+                ", orign='" + getOrign() + '\'' +
+                ", detail='" + getDetail() + '\'' +
+                ", quantity=" + getQuantity() +
+                ", createDate='" + getCreateDate() + '\'' +
+                '}';
+    }
 
 }

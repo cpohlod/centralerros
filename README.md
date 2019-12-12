@@ -27,7 +27,7 @@ Consulta todos usuário:
 	]
 	
 	exemplo:
-	https://centralerros.herokuapp.com/logins/8c595375991ad5b5f163fa04f52a34f63a00599ee9600c77efd53ec1cd0b3308
+	https://centralerros.herokuapp.com/logins/8c595375991ad5b5f163
 	
 Consulta de logs:
 
@@ -47,4 +47,24 @@ Consulta de logs:
     ]
     
 	exemplo:
-	https://centralerros.herokuapp.com/logs/8c595375991ad5b5f163fa04f52a34f63a00599ee9600c77efd53ec1cd0b3308
+	https://centralerros.herokuapp.com/logs/8c595375991ad5b5f163
+
+Consulta detalhe do log:
+
+	url: https://centralerros.herokuapp.com/log/<id>/<token>
+	método: GET
+	retorno: json com o detalhe do log
+    {
+        "id": 1,
+        "name": "Erro no 127.0.0.1",
+        "createDate": "24/05/2019 10:15",
+        "type": "ERROR",
+        "title":"aceleration.Service.AddCanditate <forbidden>" 
+        "orign": "Token do usuário Elton",
+        "detail": "o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http). etc....",
+        "quantity": 1000
+    }
+    
+	exemplo:
+	https://centralerros.herokuapp.com/log/1/8c595375991ad5b5f163
+	
