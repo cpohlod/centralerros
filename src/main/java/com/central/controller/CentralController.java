@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,6 +31,7 @@ import com.central.error.CentralNotFoundException;
 import com.central.helper.LoginHelper;
 import com.central.repo.LogRepository;
 import com.central.repo.LoginRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class CentralController {
@@ -51,20 +53,30 @@ public class CentralController {
 	public void login(HttpServletRequest request, HttpServletResponse response, @RequestBody String jsonSecurity) {
 		System.out.println("login");
 		try {
-			Login login = Login.jsonToLogin(jsonSecurity);
+			Login loginWeb = Login.jsonToLogin(jsonSecurity);
+			Login loginBase = loginRepo.findByEmail(loginWeb.getEmail());
+	    	if (loginBase == null) {
+		    	geraLog("ERRO", "login", loginWeb.getEmail(), "Email incorreto");
+	    		throw new CentralNotFoundException("Login incorreto");
+	    	} 
+	    	if (!loginWeb.getPwd().equals(loginBase.getPwd())) {
+		    	geraLog("ERRO", "login", loginBase.getEmail(), "Senha incorreta");
+		    	throw new CentralNotFoundException("Senha incorreta");
+	    	}
+			
 			LoginHelper service = new LoginHelper(3);
-			String token = service.sifra(login.getEmail()+login.getPwd());
+			String token = service.sifra(loginWeb.getEmail());
 			securityParams.put(token, jsonSecurity);
-	    	String detail = "login efetuado pelo "+login.getName();
-	    	geraLog("INFO", "login", login.getName(), detail);
+	    	String detail = "login efetuado pelo "+loginWeb.getName();
+	    	geraLog("INFO", "login", loginWeb.getName(), detail);
 			writeResponse(response, token);
 		} catch (Exception e) {
-			throw new CentralNotFoundException("Não foi possível fazer o login");
+	    	geraLog("ERRO", "login", "Sistema", "Erro no processamento do login "+jsonSecurity);
 		}
 	}
     
     // FindAll logs
-    @GetMapping("/logs/{token}")
+    @GetMapping("/buscalogs/{token}")
     @CrossOrigin(maxAge = 3600)
     public List<Log> findAllLogs(@PathVariable String token) {
     	String orign = processaLogin(token);
@@ -97,19 +109,64 @@ public class CentralController {
         
     }
 
-    // Delete by ID
-    @GetMapping("/deletelog/{id}/{token}")
+    // Arquiva logs by IDs
+    @RequestMapping(value = "arquivalogs/{token}", method = RequestMethod.POST)	
+	@CrossOrigin(maxAge = 3600)
+	@ResponseBody
+    public void arquivalogs(@PathVariable String token, @RequestBody String jsonIds) {
+    	String orign = processaLogin(token);
+    	String detail = "arquivas log ids "+jsonIds;
+    	geraLog("INFO", "arquivalogs", orign.equals("")? token : orign, detail);
+    	System.out.println(jsonIds);
+    	ObjectMapper mapper = new ObjectMapper();
+		try {
+			Map<String, Object> map = mapper.readValue(jsonIds, Map.class);
+			List<Integer> arr = (java.util.ArrayList)map.get("ids");
+			for (Integer id : arr) {
+		    	Optional<Log> logAux = logRepo.findById(new Long(id));
+		    	Log log = logAux.get();
+		    	log.setSituacao("A");
+		    	logRepo.save(log);
+			}
+		} catch (Exception e) {
+	    	geraLog("ERRO", "arquivalogs", orign.equals("")? token : orign, detail);
+		}
+    }
+
+    // Delete log by ID
+    @GetMapping("/deletalog/{id}/{token}")
     @CrossOrigin(maxAge = 3600)
-    public void deletelog(@PathVariable String token, @PathVariable Long id) {
+    public void deletalog(@PathVariable String token, @PathVariable Long id) {
     	String orign = processaLogin(token);
     	String detail = "exclui log pelo id "+id;
     	geraLog("INFO", "deletelog", orign.equals("")? token : orign, detail);
 
-    	logRepo.deleteById(id);;
+    	logRepo.deleteById(id);
+    }
+
+    // Delete logs by IDs
+    @RequestMapping(value = "deletalogs/{token}", method = RequestMethod.POST)	
+	@CrossOrigin(maxAge = 3600)
+	@ResponseBody
+    public void deletalogs(@PathVariable String token, @RequestBody String jsonIds) {
+    	String orign = processaLogin(token);
+    	String detail = "exclui logs ids "+jsonIds;
+    	geraLog("INFO", "deletalogs", orign.equals("")? token : orign, detail);
+    	System.out.println(jsonIds);
+    	ObjectMapper mapper = new ObjectMapper();
+		try {
+			Map<String, Object> map = mapper.readValue(jsonIds, Map.class);
+			List<Integer> arr = (java.util.ArrayList)map.get("ids");
+			for (Integer id : arr) {
+				logRepo.deleteById(new Long(id));
+			}
+		} catch (Exception e) {
+	    	geraLog("ERRO", "arquivalogs", orign.equals("")? token : orign, detail);
+		}
     }
 
     // Find by ID
-    @GetMapping("/log/{id}/{token}")
+    @GetMapping("/buscalog/{id}/{token}")
     @CrossOrigin(maxAge = 3600)
     public Log findlog(@PathVariable String token, @PathVariable Long id) {
     	String orign = processaLogin(token);
@@ -132,7 +189,7 @@ public class CentralController {
     }
     
     // Find
-    @GetMapping("/findlogin/{token}{email}")
+    @GetMapping("/buscalogin/{token}{email}")
     @CrossOrigin(maxAge = 3600)
     public Login findlogin(@PathVariable String token, @PathVariable String email) {
 		String orign = processaLogin(token);
@@ -141,7 +198,7 @@ public class CentralController {
     	
     	Login login = loginRepo.findByEmail(email);
     	if (login == null) {
-    		new CentralNotFoundException("Login não encontrado");
+    		throw new CentralNotFoundException("Login não encontrado");
     	} 
         return login;
     }
@@ -179,13 +236,13 @@ public class CentralController {
 		}		
     }
 
-    @GetMapping("/deletelogin/{token}/{email}")
+    @GetMapping("/deletalogin/{token}/{email}")
     @CrossOrigin(maxAge = 3600)
     public void deleteLogin(@PathVariable String token, @PathVariable String email) {
     	processaLogin(token);
     	Login login = loginRepo.findByEmail(email);
     	if (login == null) {
-    		new CentralNotFoundException("Login não encontrado");
+    		throw new CentralNotFoundException("Login não encontrado");
     	} 
     	String detail = "exclui usuário "+login.getName();
     	geraLog("INFO", "deleteLogin", login.getName(), detail);
@@ -194,18 +251,19 @@ public class CentralController {
     
     
 	private String processaLogin(String token) {
-		String jsonSecurity = securityParams.get(token);
-		if (jsonSecurity==null) {
-	    	String detail = "Usuário não logado, favor efetuar o login na central de erros";
-	    	geraLog("ERROR", "processaLogin", token, detail);
-			throw new CentralNotFoundException(detail);
-		}
-		try {
-			Login login = Login.jsonToLogin(jsonSecurity);
-			return login.getName();
-		} catch (IOException e) {
-			throw new CentralNotFoundException("Informações de Login inválido");
-		}
+		return "ok";
+//		String jsonSecurity = securityParams.get(token);
+//		if (jsonSecurity==null) {
+//	    	String detail = "Usuário não logado, favor efetuar o login na central de erros";
+//	    	geraLog("ERROR", "processaLogin", token, detail);
+//			throw new CentralNotFoundException(detail);
+//		}
+//		try {
+//			Login login = Login.jsonToLogin(jsonSecurity);
+//			return login.getName();
+//		} catch (IOException e) {
+//			throw new CentralNotFoundException("Informações de Login inválido");
+//		}
 	}
 
     private void writeResponse(HttpServletResponse response, String html) throws IOException {

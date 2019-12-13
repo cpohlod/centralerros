@@ -36,10 +36,11 @@ public class StartApplication implements CommandLineRunner {
 
         log.info("StartApplication...");
 
-        loginRepo.save(new Login("cleverson", "cleverson@softplan.com.br", "123"));
-        loginRepo.save(new Login("marcelo", "marcelo@hotmail.com", "123"));
-        loginRepo.save(new Login("jaquiel", "jaquiel.paim@gmail.com", "123"));
-        loginRepo.save(new Login("jerson", "jersonseling@yahoo.com.br", "123"));
+        loginRepo.save(new Login("abc", "abc@abc.com", "123456"));
+        loginRepo.save(new Login("cleverson", "cleverson@softplan.com.br", "123456"));
+        loginRepo.save(new Login("marcelo", "marcelo@hotmail.com", "123456"));
+        loginRepo.save(new Login("jaquiel", "jaquiel.paim@gmail.com", "123456"));
+        loginRepo.save(new Login("jerson", "jersonseling@yahoo.com.br", "123456"));
         Calendar cal = Calendar.getInstance();
         for(int i=0; i<100;i++) {
         	String title = "Log de inicialização da app";

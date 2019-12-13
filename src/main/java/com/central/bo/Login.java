@@ -37,6 +37,7 @@ public class Login {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", pwd='" + pwd + '\'' +
                 '}';
     }
 
