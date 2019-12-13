@@ -20,6 +20,7 @@ public class Log {
     private String detail;
     private Long quantity;
     private Date createDate;
+    private String situacao;
     
     public Log() {
     }
@@ -32,6 +33,7 @@ public class Log {
     	this.setDetail(detail);
     	this.setQuantity(quantity);
     	this.setCreateDate(createDate);
+    	this.setSituacao("I");
     }
 
     public Long getId() {
@@ -111,5 +113,13 @@ public class Log {
                 ", createDate='" + getCreateDate() + '\'' +
                 '}';
     }
+
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
+	}
 
 }

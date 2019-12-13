@@ -82,16 +82,42 @@ public class CentralController {
         logRepo.save(log);
 	}
 
+    // Arquiva log by ID
+    @GetMapping("/arquivalog/{id}/{token}")
+    @CrossOrigin(maxAge = 3600)
+    public void arquivalog(@PathVariable String token, @PathVariable Long id) {
+    	String orign = processaLogin(token);
+    	String detail = "arquiva log pelo id "+id;
+    	geraLog("INFO", "arquivalog", orign.equals("")? token : orign, detail);
+
+    	Optional<Log> logAux = logRepo.findById(id);
+    	Log log = logAux.get();
+    	log.setSituacao("A");
+    	logRepo.save(log);
+        
+    }
+
+    // Delete by ID
+    @GetMapping("/deletelog/{id}/{token}")
+    @CrossOrigin(maxAge = 3600)
+    public void deletelog(@PathVariable String token, @PathVariable Long id) {
+    	String orign = processaLogin(token);
+    	String detail = "exclui log pelo id "+id;
+    	geraLog("INFO", "deletelog", orign.equals("")? token : orign, detail);
+
+    	logRepo.deleteById(id);;
+    }
+
     // Find by ID
     @GetMapping("/log/{id}/{token}")
     @CrossOrigin(maxAge = 3600)
-    public Optional<Log> findlog(@PathVariable String token, @PathVariable Long id) {
+    public Log findlog(@PathVariable String token, @PathVariable Long id) {
     	String orign = processaLogin(token);
     	String detail = "busca pelo detalhe do log com id "+id;
     	geraLog("INFO", "findlog", orign.equals("")? token : orign, detail);
 
     	Optional<Log> log = logRepo.findById(id);
-        return log;
+        return log.get();
     }
 
     // FindAll logins
