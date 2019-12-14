@@ -62,6 +62,7 @@ public class CentralController {
     
     // FindAll logs
     @GetMapping("/logs/{token}")
+    @CrossOrigin(maxAge = 3600)
     public List<Log> findAllLogs(@PathVariable String token) {
     	String orign = processaLogin(token);
     	String detail = "busca de todos os logs da aplicação pelo token "+token;
@@ -80,6 +81,7 @@ public class CentralController {
 
     // Arquiva log by ID
     @GetMapping("/arquivalog/{id}/{token}")
+    @CrossOrigin(maxAge = 3600)
     public void arquivalog(@PathVariable String token, @PathVariable Long id) {
     	String orign = processaLogin(token);
     	String detail = "arquiva log pelo id "+id;
@@ -93,6 +95,7 @@ public class CentralController {
 
     // Delete by ID
     @GetMapping("/deletelog/{id}/{token}")
+    @CrossOrigin(maxAge = 3600)
     public void deletelog(@PathVariable String token, @PathVariable Long id) {
     	String orign = processaLogin(token);
     	String detail = "exclui log pelo id "+id;
@@ -103,6 +106,7 @@ public class CentralController {
 
     // Find by ID
     @GetMapping("/log/{id}/{token}")
+    @CrossOrigin(maxAge = 3600)
     public Log findlog(@PathVariable String token, @PathVariable Long id) {
     	String orign = processaLogin(token);
     	String detail = "busca pelo detalhe do log com id "+id;
@@ -114,6 +118,7 @@ public class CentralController {
 
     // FindAll logins
     @GetMapping("/logins/{token}")
+    @CrossOrigin(maxAge = 3600)
     public List<Login> findAllLogins(@PathVariable String token) {
 		String orign = processaLogin(token);
     	String detail = "busca por todos os logins token "+token;
@@ -124,6 +129,7 @@ public class CentralController {
     
     // Find
     @GetMapping("/findlogin/{token}")
+    @CrossOrigin(maxAge = 3600)
     public Login findlogin(@PathVariable String token) {
 		String orign = processaLogin(token);
     	String detail = "busca pelas informações do login de token "+token;
