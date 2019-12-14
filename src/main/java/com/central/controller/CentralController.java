@@ -129,12 +129,15 @@ public class CentralController {
     	String detail = "busca pelas informações do login de token "+token;
     	geraLog("INFO", "findlogin", orign.equals("")? token : orign, detail);
     	String jsonSecurity = StartApplication.securityParams.get(token);
-    	try {
-			return Login.jsonToLogin(jsonSecurity);
-		} catch (IOException e) {
-			geraLog("ERRO", "findlogin", orign.equals("")? token : orign, detail);
-			throw new CentralNotFoundException("Login não encontrado");
-		}
+    	return loginRepo.findByToken(token);
+//    	try {
+//    		
+//
+//			//return Login.jsonToLogin(jsonSecurity);
+//		} catch (IOException e) {
+//			geraLog("ERRO", "findlogin", orign.equals("")? token : orign, detail);
+//			throw new CentralNotFoundException("Login não encontrado");
+//		}
     }
 
     @RequestMapping(value = "savelogin", method = RequestMethod.POST)	
@@ -144,6 +147,9 @@ public class CentralController {
 		System.out.println("savelogin");
 		try {
 	    	Login saveLogin = Login.jsonToLogin(jsonSecurity);
+	    	LoginHelper service = new LoginHelper(3);
+	    	String token = service.sifra(saveLogin.getEmail());
+	    	saveLogin.setToken(token);
 	    	Login login = loginRepo.findByEmail(saveLogin.getEmail());
 	    	if (login==null) {
 	        	String detail = "salva informações do novo usuário "+saveLogin.getName();
@@ -158,6 +164,7 @@ public class CentralController {
 	                    x.setName(saveLogin.getName());
 	                    x.setEmail(saveLogin.getEmail());
 	                    x.setPwd(saveLogin.getPwd());
+	                    x.setToken(saveLogin.getToken());
 	                    return loginRepo.save(x);
 	                })
 	                .orElseGet(() -> {
@@ -185,18 +192,19 @@ public class CentralController {
     
     
 	private String processaLogin(String token) {
-		String jsonSecurity = StartApplication.securityParams.get(token);
-		if (jsonSecurity==null) {
-	    	String detail = "Usuário não logado, favor efetuar o login na central de erros";
-	    	geraLog("ERROR", "processaLogin", token, detail);
-			throw new CentralNotFoundException(detail);
-		}
-		try {
-			Login login = Login.jsonToLogin(jsonSecurity);
-			return login.getEmail();
-		} catch (IOException e) {
-			throw new CentralNotFoundException("Informações de Login inválido");
-		}
+		return token;
+//		String jsonSecurity = StartApplication.securityParams.get(token);
+//		if (jsonSecurity==null) {
+//	    	String detail = "Usuário não logado, favor efetuar o login na central de erros";
+//	    	geraLog("ERROR", "processaLogin", token, detail);
+//			throw new CentralNotFoundException(detail);
+//		}
+//		try {
+//			Login login = Login.jsonToLogin(jsonSecurity);
+//			return login.getEmail();
+//		} catch (IOException e) {
+//			throw new CentralNotFoundException("Informações de Login inválido");
+//		}
 	}
 
     private void writeResponse(HttpServletResponse response, String html) throws IOException {

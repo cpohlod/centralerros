@@ -34,7 +34,7 @@ public class LogRepositoryTest {
         List<Log> logs = repository.findByName("cleverson");
         assertEquals(1, logs.size());
 
-        assertThat(logs).extracting(Log::getName).containsOnly("TESTE DE LOG");
+        assertThat(logs).extracting(Log::getName).containsOnly("cleverson");
         
     }
 
