@@ -3,6 +3,7 @@ package com.central;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,9 @@ public class StartApplication implements CommandLineRunner {
 	@Autowired
     private LogRepository logRepo;
 	
-    public static void main(String[] args) {
+   public static ConcurrentHashMap<String, String> securityParams = new ConcurrentHashMap<>();
+   
+   public static void main(String[] args) {
         SpringApplication.run(StartApplication.class, args);
     }
 

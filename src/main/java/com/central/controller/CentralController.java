@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.central.StartApplication;
 import com.central.bo.Log;
 import com.central.bo.Login;
 import com.central.error.CentralNotFoundException;
@@ -41,7 +41,6 @@ public class CentralController {
     @Autowired
     private LogRepository logRepo;
     
-    protected static ConcurrentHashMap<String, String> securityParams = new ConcurrentHashMap<>();
 	
     @RequestMapping(value = "login", method = RequestMethod.POST)	
 	@CrossOrigin(maxAge = 3600)
@@ -52,7 +51,7 @@ public class CentralController {
 			Login login = Login.jsonToLogin(jsonSecurity);
 			LoginHelper service = new LoginHelper(3);
 			String token = service.sifra(login.getEmail());
-			securityParams.put(token, jsonSecurity);
+			StartApplication.securityParams.put(token, jsonSecurity);
 	    	String detail = "login efetuado pelo "+login.getName();
 	    	geraLog("INFO", "login", login.getName(), detail);
 			writeResponse(response, token);
@@ -129,7 +128,7 @@ public class CentralController {
 		String orign = processaLogin(token);
     	String detail = "busca pelas informações do login de token "+token;
     	geraLog("INFO", "findlogin", orign.equals("")? token : orign, detail);
-    	String jsonSecurity = securityParams.get(token);
+    	String jsonSecurity = StartApplication.securityParams.get(token);
     	try {
 			return Login.jsonToLogin(jsonSecurity);
 		} catch (IOException e) {
@@ -186,7 +185,7 @@ public class CentralController {
     
     
 	private String processaLogin(String token) {
-		String jsonSecurity = securityParams.get(token);
+		String jsonSecurity = StartApplication.securityParams.get(token);
 		if (jsonSecurity==null) {
 	    	String detail = "Usuário não logado, favor efetuar o login na central de erros";
 	    	geraLog("ERROR", "processaLogin", token, detail);

@@ -31,7 +31,7 @@ public class LogRepositoryTest {
     public void testFindByName() {
 
     	geraLog("TESTE", "TESTE DE LOG", "orign", "detail");
-        List<Log> logs = repository.findByName("TESTE DE LOG");
+        List<Log> logs = repository.findByName("cleverson");
         assertEquals(1, logs.size());
 
         assertThat(logs).extracting(Log::getName).containsOnly("TESTE DE LOG");
