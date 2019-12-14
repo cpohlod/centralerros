@@ -154,8 +154,8 @@ public class CentralController {
 	    	if (login==null) {
 	        	String detail = "salva informações do novo usuário "+saveLogin.getName();
 	        	geraLog("INFO", "savelogin", saveLogin.getName(), detail);
-
-	        	return loginRepo.save(saveLogin);
+	        	return loginRepo.save(new Login(saveLogin.getName(), saveLogin.getEmail(), saveLogin.getPwd(),saveLogin.getToken()));
+	        	//return loginRepo.save();
 	    	} else {
 	        	String detail = "salva informações do usuário existente "+saveLogin.getName();
 	        	geraLog("INFO", "savelogin", saveLogin.getName(), detail);
